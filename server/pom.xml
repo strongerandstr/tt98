@@ -24,6 +24,7 @@
             <artifactId>paicoding-ui</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
     </dependencies>
 
     <properties>
