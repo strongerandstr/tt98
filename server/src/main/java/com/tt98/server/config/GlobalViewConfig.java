@@ -4,10 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-/**
- * @author yihui
- * @date 2022/6/15
- */
+
 @Data
 @ConfigurationProperties(prefix = "view.site")   // 该注解会去找 .yml配置中前缀为view.site的
 @Component

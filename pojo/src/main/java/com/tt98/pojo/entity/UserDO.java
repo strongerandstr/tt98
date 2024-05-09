@@ -1,6 +1,7 @@
 package com.tt98.pojo.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,6 +9,7 @@ import java.sql.Timestamp;
 
 @Data
 @Builder
+@TableName(value = "user")
 public class UserDO {
     private long id;                 // 主键ID
     private String thirdAccountId;   // 第三方用户ID

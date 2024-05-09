@@ -1,6 +1,9 @@
 package com.tt98.pojo.vo;
 
+import com.tt98.pojo.dto.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class IndexVO {

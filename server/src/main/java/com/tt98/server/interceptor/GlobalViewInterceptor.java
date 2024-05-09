@@ -1,5 +1,6 @@
 package com.tt98.server.interceptor;
 
+import com.tt98.server.common.GlobalInitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;

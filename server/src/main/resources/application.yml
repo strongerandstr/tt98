@@ -2,8 +2,8 @@ server:
   port: 3601
 
 spring:
-  profiles:
-    active: dev
+  config:
+    import: application-config.yml
   main:
     allow-circular-references: true
   datasource:
@@ -21,7 +21,7 @@ spring:
 mybatis:
   #mapper配置文件
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.sky.entity
+  type-aliases-package: com.tt98.pojo.entity
   configuration:
     #开启驼峰命名
     map-underscore-to-camel-case: true
