@@ -1,7 +1,11 @@
 package com.tt98.server.service;
 
+import com.tt98.pojo.dto.PageParamDTO;
+import com.tt98.pojo.dto.TagDTO;
+import com.tt98.pojo.vo.PageVO;
+
 public interface TagService {
 
-    public void getTags();
 
+    PageVO<TagDTO> queryTags(String key, PageParamDTO newPageInstance);
 }
