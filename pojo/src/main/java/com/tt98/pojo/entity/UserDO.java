@@ -1,6 +1,8 @@
 package com.tt98.pojo.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +13,8 @@ import java.sql.Timestamp;
 @Builder
 @TableName(value = "user")
 public class UserDO {
-    private long id;                 // 主键ID
+    @TableId(type = IdType.AUTO)
+    private Long id;                 // 主键ID
     private String thirdAccountId;   // 第三方用户ID
     private String username;         //
     private String password;

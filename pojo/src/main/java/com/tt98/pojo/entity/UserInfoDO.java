@@ -1,6 +1,8 @@
 package com.tt98.pojo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.Data;
@@ -10,6 +12,9 @@ import java.sql.Timestamp;
 @Data
 @TableName(value = "user_info", autoResultMap = true)
 public class UserInfoDO {
+    @TableId(type = IdType.AUTO)
+    private Long id;
+
     private Long userId;
 
     private String userName;
