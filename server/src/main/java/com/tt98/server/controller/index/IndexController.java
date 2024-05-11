@@ -19,9 +19,4 @@ public class IndexController {
         return "views/home/index_test";
     }
 
-    @GetMapping("/subscribe")
-    public SseEmitter subscribe(@RequestParam String deviceId){
-        return new SseEmitter(0L);
-
-    }
 }

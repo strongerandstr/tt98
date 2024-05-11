@@ -14,24 +14,25 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
     @Override
-    public Boolean login(UserLoginDTO userLoginDTO) {
+    public Long login(UserLoginDTO userLoginDTO) {
         // 检查数据库有没有这个用户
-        UserDO user = userMapper.getUserByName(userLoginDTO.getUsername());
 
+        UserDO user = userMapper.getUserByName(userLoginDTO.getUsername());
+        long id = -1L;
         if(user == null){
             // 注册一个账户
-            saveUser(userLoginDTO.getUsername(), userLoginDTO.getPassword());
-            return Boolean.TRUE;
-        }
-        if(!user.getPassword().equals(userLoginDTO.getPassword())){
-            return Boolean.FALSE;
-        }
+            id = saveUser(userLoginDTO.getUsername(), userLoginDTO.getPassword());
 
-        return Boolean.TRUE;
+        } else if(user.getPassword().equals(userLoginDTO.getPassword())){
+            id = user.getId();
+        } else {
+            // 密码不对
+        }
+        return id > 0 ? Long.valueOf(id) : null;
     }
 
     // 新增用户
-    public void saveUser(String name, String password){
+    public long saveUser(String name, String password){
         UserDO user = UserDO.builder()
                 .username(name)
                 .password(password)
@@ -40,5 +41,7 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         userMapper.insert(user);
+        Long id = user.getId();
+        return id;
     }
 }

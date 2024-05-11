@@ -6,5 +6,5 @@ import com.tt98.pojo.dto.UserLoginDTO;
 public interface UserService {
 
 
-    Boolean login(UserLoginDTO userLoginDTO);
+    Long login(UserLoginDTO userLoginDTO);
 }

@@ -4,15 +4,15 @@ package com.tt98.server.controller.article;
 import com.tt98.pojo.Result;
 import com.tt98.pojo.dto.PageParamDTO;
 import com.tt98.pojo.dto.TagDTO;
+import com.tt98.pojo.req.ArticlePostReq;
 import com.tt98.pojo.vo.PageVO;
+import com.tt98.server.service.ArticleService;
 import com.tt98.server.service.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Slf4j
@@ -21,6 +21,8 @@ import java.util.List;
 public class ArticleRestController {
     @Autowired
     private TagService tagService;
+    @Autowired
+    private ArticleService articleService;
 
     @GetMapping("/tag/list")
     public Result<PageVO<TagDTO>> getTagList(@RequestParam(required = false) String key,
@@ -33,5 +35,11 @@ public class ArticleRestController {
         }
 
         return Result.success(pageVo);
+    }
+
+    @PostMapping("/post")
+    public Result<Long> post(@RequestBody ArticlePostReq req, HttpServletResponse response){
+
+        return Result.success(Long.valueOf(0L));
     }
 }

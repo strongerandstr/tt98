@@ -13,8 +13,10 @@ import java.sql.Timestamp;
 @Builder
 @TableName(value = "user")
 public class UserDO {
+
     @TableId(type = IdType.AUTO)
     private Long id;                 // 主键ID
+
     private String thirdAccountId;   // 第三方用户ID
     private String username;         //
     private String password;
