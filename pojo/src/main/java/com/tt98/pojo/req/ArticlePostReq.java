@@ -53,4 +53,8 @@ public class ArticlePostReq implements Serializable {
     private String actionType;
 
     private Long columnId;
+
+    public boolean deleted() {
+        return "deleted".equalsIgnoreCase(actionType);
+    }
 }

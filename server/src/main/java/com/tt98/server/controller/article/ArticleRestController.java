@@ -39,7 +39,7 @@ public class ArticleRestController {
 
     @PostMapping("/post")
     public Result<Long> post(@RequestBody ArticlePostReq req, HttpServletResponse response){
-
+        articleService.saveArticle(req);
         return Result.success(Long.valueOf(0L));
     }
 }

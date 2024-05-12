@@ -30,7 +30,7 @@ public class ArticleDO {
 
     private Integer source;
 
-    private String sourceURL;
+    private String sourceUrl;
 
     private Long officialStat;
 
