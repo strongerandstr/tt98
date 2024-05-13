@@ -53,10 +53,7 @@ public class SnowflakeIdGenerator implements IdGenerator {
 
     public SnowflakeIdGenerator(){
         try {
-            // TODO: 2024/5/12 因为IpUtil类有一些依赖问题，这里采用固定ip 
             String ip = IpUtil.getLocalIp4Address();
-//            String ip = "172.23.32.1";
-
             String[] cells = StringUtils.split(ip,".");
             this.dataCenter = Integer.parseInt(cells[0]) & ((1<<DATA_CENTER_BITS)-1);
             this.workId = Integer.parseInt(cells[3]) >> 16 & ((1 << WORKER_ID_BITS)-1);

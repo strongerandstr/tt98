@@ -3,7 +3,9 @@ package com.tt98.server.controller.article;
 
 import com.tt98.pojo.dto.CategoryDTO;
 import com.tt98.pojo.vo.ArticleEditVO;
+import com.tt98.server.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,21 +20,15 @@ import java.util.List;
 @RequestMapping("/article")
 @Controller
 public class ArticleViewController {
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping("/edit")
     public String edit(@RequestParam(required = false) Long articleId, Model model){
         ArticleEditVO vo = new ArticleEditVO();
 
-        // TODO: 2024/5/12 修改这里的逻辑 
-        CategoryDTO category1 = new CategoryDTO();
-        category1.setCategory("分类1");
-        category1.setCategoryId(1L);
-        category1.setRank(1);
-        category1.setSelected(true);
-        category1.setStatus(1);
-        List<CategoryDTO> list = new ArrayList<>();
-        list.add(category1);
-        vo.setCategories(list);
+        List<CategoryDTO> categoryDTOList = categoryService.queryAll();
+        vo.setCategories(categoryDTOList);
 
         model.addAttribute("vo", vo);
         return "views/article-edit/index";

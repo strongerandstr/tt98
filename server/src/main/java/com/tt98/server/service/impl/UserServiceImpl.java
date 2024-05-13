@@ -1,7 +1,11 @@
 package com.tt98.server.service.impl;
 
+import com.tt98.pojo.converter.Converter;
+import com.tt98.pojo.dto.BaseUserInfoDTO;
 import com.tt98.pojo.dto.UserLoginDTO;
 import com.tt98.pojo.entity.UserDO;
+import com.tt98.pojo.entity.UserInfoDO;
+import com.tt98.server.dao.UserInfoDAO;
 import com.tt98.server.mapper.UserMapper;
 import com.tt98.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,10 @@ import java.sql.Timestamp;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserInfoDAO userInfoDAO;
+
+
     @Override
     public Long login(UserLoginDTO userLoginDTO) {
         // 检查数据库有没有这个用户
@@ -29,6 +37,15 @@ public class UserServiceImpl implements UserService {
             // 密码不对
         }
         return id > 0 ? Long.valueOf(id) : null;
+    }
+
+    @Override
+    public BaseUserInfoDTO queryBasicUserInfo(Long userId) {
+        UserInfoDO user = userInfoDAO.getByUserId(userId);
+//        if (user == null) {
+//            throw ExceptionUtil.of(StatusEnum.USER_NOT_EXISTS, "userId=" + userId);
+//        }
+        return Converter.toDTO(user);
     }
 
     // 新增用户

@@ -1,8 +1,12 @@
 package com.tt98.server.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tt98.pojo.converter.ArticleConverter;
+import com.tt98.pojo.dto.ArticleDTO;
+import com.tt98.pojo.dto.PageParamDTO;
 import com.tt98.pojo.entity.ArticleDO;
 import com.tt98.pojo.req.ArticlePostReq;
+import com.tt98.pojo.vo.PageListVO;
 import com.tt98.server.common.util.IdUtil;
 import com.tt98.server.common.util.NumUtil;
 import com.tt98.server.common.ReqContext;
@@ -16,7 +20,9 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -26,13 +32,16 @@ public class ArticleServiceImpl implements ArticleService {
     private TransactionTemplate transactionTemplate;
     @Autowired
     private ArticleDAO articleDAO;
+
+
+
     @Override
     public Long saveArticle(ArticlePostReq req) {
         // 要写哪个表？ article, article_detail, article_tag
         Long authorId = ReqContext.getCurrentId();
         ArticleDO article = ArticleConverter.toArticleDO(req, authorId);
-        // TODO: 2024/5/12 修改content
-        String content = "";
+        // TODO: 2024/5/12 content包含图片链接，需要转存
+        String content = req.getContent();
         // 事务
         return transactionTemplate.execute(new TransactionCallback<Long>() {
             @Override
@@ -55,6 +64,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     }
 
+
 //    private Long updateArticle(ArticleDO article, String content, Set<Long> tagIds) {
 //
 //    }
@@ -72,11 +82,12 @@ public class ArticleServiceImpl implements ArticleService {
         articleDAO.saveOrUpdate(article);
         Long articleId = article.getId();
         // 保存文章内容
-        // TODO: 2024/5/12 保存content到article表
-//        articleDAO.saveArticle
+        // TODO: 2024/5/12 保存content到article_detail表
+        articleDAO.saveArticleContent(articleId, content);
 
         // 发布文章, 阅读数+1
         // TODO: 2024/5/12 发布文章,阅读数+1
+
 
         // TODO: 2024/5/12 发布文章创建事件等内容
 

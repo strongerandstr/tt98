@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -24,10 +25,10 @@ public class ArticleDTO {
     private String content;
     private ArticleFootCountDTO count;
     private String cover;
-    private Integer creamStat;
+    private Long creamStat;
     private Long createTime;
     private Long lastUpdateTime;
-    private Integer officialStat;
+    private Long officialStat;
     private Boolean praised;
 
     private List<SimpleUserInfoDTO> praisedUsers;
@@ -38,6 +39,6 @@ public class ArticleDTO {
     private String summary;
     private List<TagDTO> tags;
     private String title;
-    private Integer toppingStat;
+    private Long toppingStat;
 
 }
