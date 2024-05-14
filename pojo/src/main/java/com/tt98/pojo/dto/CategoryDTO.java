@@ -1,5 +1,6 @@
 package com.tt98.pojo.dto;
 
+import com.tt98.pojo.Enum.PushStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,16 @@ public class CategoryDTO implements Serializable {
     private Integer status;
 
     public CategoryDTO(Long categoryId, String category){
+        this(categoryId, category, 0);
+    }
+
+    public CategoryDTO(Long categoryId, String category, Integer rank){
         this.categoryId = categoryId;
         this.category = category;
+        this.status = PushStatusEnum.ONLINE.getCode();
+        this.rank = rank;
+        this.selected = false;
     }
+
+
 }

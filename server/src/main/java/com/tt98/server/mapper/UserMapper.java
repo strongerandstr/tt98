@@ -9,6 +9,6 @@ public interface UserMapper extends BaseMapper<UserDO> {
 
     @Select("select * from user where user_name = #{username};")
     UserDO getUserByName(String username);
-//
-//    void insert(UserDO user);
+
+
 }

@@ -7,4 +7,5 @@ import com.tt98.pojo.vo.PageListVO;
 public interface ArticleReadService {
     PageListVO<ArticleDTO> queryArticlesByCategory(Long categoryId, PageParamDTO newPageInstance);
 
+    ArticleDTO queryFullArticleInfo(Long articleId, Long userId);
 }

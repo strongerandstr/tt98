@@ -18,7 +18,7 @@ public class UserDO {
     private Long id;                 // 主键ID
 
     private String thirdAccountId;   // 第三方用户ID
-    private String username;         //
+    private String userName;         //
     private String password;
     private int loginType;           // 登录方式：0-微信登录  1-账号登陆
     private int deleted;             // 是否删除

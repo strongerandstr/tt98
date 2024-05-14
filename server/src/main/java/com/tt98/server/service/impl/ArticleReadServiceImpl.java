@@ -3,8 +3,10 @@ package com.tt98.server.service.impl;
 import com.tt98.pojo.converter.ArticleConverter;
 import com.tt98.pojo.dto.ArticleDTO;
 import com.tt98.pojo.dto.BaseUserInfoDTO;
+import com.tt98.pojo.dto.CategoryDTO;
 import com.tt98.pojo.dto.PageParamDTO;
 import com.tt98.pojo.entity.ArticleDO;
+import com.tt98.pojo.entity.UserFootDO;
 import com.tt98.pojo.vo.PageListVO;
 import com.tt98.server.dao.ArticleDAO;
 import com.tt98.server.dao.ArticleTagDAO;
@@ -47,6 +49,45 @@ public class ArticleReadServiceImpl implements ArticleReadService {
 
 //        return PageListVO.newVO(articleDTOS, page.getPageSize());
         return buildArticleListVO(records, page.getPageSize());
+    }
+
+    @Override
+    public ArticleDTO queryFullArticleInfo(Long articleId, Long userId) {
+        ArticleDTO articleDTO = queryDetailArticleInfo(articleId);
+        // TODO: 2024/5/14 阅读计数要修改
+        // 文章阅读计数+1
+//        countService.incrArticleReadCount(articleDTO.getAuthor(), articleId);
+
+        // TODO: 2024/5/14 文章操作标记
+        articleDTO.setPraised(false);
+        articleDTO.setCommented(false);
+        articleDTO.setCollected(false);
+        if(userId != null){
+            // 判断是否点赞、评论、收藏
+//            UserFootDO foot = userFootService.saveOrUpdateUserFoot(DocumentTypeEnum)
+        }
+
+
+        // 更新文章统计计数
+        articleDTO.setCount(countService.queryArticleStatisticInfo(articleId));
+        // TODO: 2024/5/14 设置文章的点赞列表
+
+
+        return articleDTO;
+    }
+
+    private ArticleDTO queryDetailArticleInfo(Long articleId) {
+        ArticleDTO articleDTO = articleDAO.queryArticleDetail(articleId);
+        if(articleDTO == null){
+            // TODO: 2024/5/14 抛出异常
+        }
+        //更新分类相关信息
+        CategoryDTO categoryDTO = articleDTO.getCategory();
+        categoryDTO.setCategory(categoryService.queryCategoryName(categoryDTO.getCategoryId()));
+
+        //更新标签信息
+        articleDTO.setTags(articleTagDAO.queryArticleTagDetails(articleId));
+        return articleDTO;
     }
 
     public PageListVO<ArticleDTO> buildArticleListVO(List<ArticleDO> records, long pageSize) {

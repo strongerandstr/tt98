@@ -51,10 +51,8 @@ public class UserServiceImpl implements UserService {
     // 新增用户
     public long saveUser(String name, String password){
         UserDO user = UserDO.builder()
-                .username(name)
+                .userName(name)
                 .password(password)
-                .createTime(new Timestamp(System.currentTimeMillis()))
-                .updateTime(new Timestamp(System.currentTimeMillis()))
                 .build();
 
         userMapper.insert(user);

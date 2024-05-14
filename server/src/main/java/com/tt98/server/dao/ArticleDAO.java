@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tt98.pojo.Enum.YesOrNoEnum;
+import com.tt98.pojo.converter.ArticleConverter;
+import com.tt98.pojo.dto.ArticleDTO;
 import com.tt98.pojo.dto.PageParamDTO;
 import com.tt98.pojo.entity.ArticleDO;
 import com.tt98.pojo.entity.ArticleDetailDO;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -52,5 +55,29 @@ public class ArticleDAO extends ServiceImpl<ArticleMapper, ArticleDO> {
         query.last(PageParamDTO.getLimitSql(page))
                 .orderByDesc(ArticleDO::getToppingStat,  ArticleDO::getCreateTime);
         return baseMapper.selectList(query);
+    }
+
+    public ArticleDTO queryArticleDetail(Long articleId) {
+        ArticleDO articleDO = baseMapper.selectById(articleId);
+        if(articleDO == null || Objects.equals(articleDO.getDeleted(), YesOrNoEnum.YES.getCode())){
+            return null;
+        }
+
+        //查询文章正文
+        ArticleDTO dto = ArticleConverter.toDTO(articleDO);
+        // TODO: 2024/5/14 审核逻辑？
+        ArticleDetailDO detail = findLatestDetail(articleId);
+        dto.setContent(detail.getContent());
+
+        return dto;
+    }
+
+    private ArticleDetailDO findLatestDetail(Long articleId) {
+        LambdaQueryWrapper<ArticleDetailDO> contentQuery = Wrappers.lambdaQuery();
+        contentQuery.eq(ArticleDetailDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .eq(ArticleDetailDO::getArticleId, articleId)
+                .orderByDesc(ArticleDetailDO::getVersion);
+
+        return articleDetailMapper.selectList(contentQuery).get(0);
     }
 }
