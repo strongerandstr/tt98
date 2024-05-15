@@ -7,6 +7,7 @@ import com.tt98.pojo.Enum.YesOrNoEnum;
 import com.tt98.pojo.converter.ArticleConverter;
 import com.tt98.pojo.dto.ArticleDTO;
 import com.tt98.pojo.dto.PageParamDTO;
+import com.tt98.pojo.dto.YearArticleDTO;
 import com.tt98.pojo.entity.ArticleDO;
 import com.tt98.pojo.entity.ArticleDetailDO;
 import com.tt98.server.mapper.ArticleDetailMapper;
@@ -79,5 +80,9 @@ public class ArticleDAO extends ServiceImpl<ArticleMapper, ArticleDO> {
                 .orderByDesc(ArticleDetailDO::getVersion);
 
         return articleDetailMapper.selectList(contentQuery).get(0);
+    }
+
+    public List<YearArticleDTO> listYearArticleByUserId(Long userId) {
+        return baseMapper.listYearArticleByUserId(userId);
     }
 }

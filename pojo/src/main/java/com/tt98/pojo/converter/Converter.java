@@ -2,8 +2,10 @@ package com.tt98.pojo.converter;
 
 import com.tt98.pojo.dto.BaseUserInfoDTO;
 import com.tt98.pojo.dto.CategoryDTO;
+import com.tt98.pojo.dto.UserStatisticInfoDTO;
 import com.tt98.pojo.entity.CategoryDO;
 import com.tt98.pojo.entity.UserInfoDO;
+import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +49,19 @@ public class Converter {
         dto.setProfile(userInfoDO.getProfile());
 //        dto.setRegion(userInfoDO.getRe);
 //        dto.setRole(userInfoDO.get);
+        dto.setCompany(userInfoDO.getCompany());
         dto.setUserId(userInfoDO.getUserId());
         dto.setUserName(userInfoDO.getUserName());
         dto.setCreateTime(userInfoDO.getCreateTime());
         dto.setUpdateTime(userInfoDO.getUpdateTime());
         return dto;
+    }
+
+    public static UserStatisticInfoDTO toUserHomeDTO(UserStatisticInfoDTO userHomeDTO, BaseUserInfoDTO baseUserInfoDTO) {
+        if(baseUserInfoDTO == null){
+            return null;
+        }
+        BeanUtils.copyProperties(baseUserInfoDTO, userHomeDTO);
+        return userHomeDTO;
     }
 }

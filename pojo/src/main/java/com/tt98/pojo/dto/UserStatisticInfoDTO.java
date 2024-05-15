@@ -2,6 +2,8 @@ package com.tt98.pojo.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 用户主页信息
  */
@@ -55,5 +57,5 @@ public class UserStatisticInfoDTO extends BaseUserInfoDTO {
     /**
      * 创作历程
      */
-//    private List<YearArticleDTO> yearArticleDTOList;
+    private List<YearArticleDTO> yearArticleDTOList;
 }

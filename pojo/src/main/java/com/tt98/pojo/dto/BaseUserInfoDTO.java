@@ -26,6 +26,7 @@ public class BaseUserInfoDTO extends BaseDTO {
      */
     private String position;
 
+    private String company;
     /**
      * 扩展字段
      */
