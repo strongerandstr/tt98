@@ -1,14 +1,14 @@
 package com.tt98.server.controller.user;
 
 import com.tt98.pojo.Enum.FollowSelectEnum;
+import com.tt98.pojo.Enum.FollowTypeEnum;
 import com.tt98.pojo.Enum.HomeSelectEnum;
-import com.tt98.pojo.dto.ArticleDTO;
-import com.tt98.pojo.dto.PageParamDTO;
-import com.tt98.pojo.dto.TagSelectDTO;
-import com.tt98.pojo.dto.UserStatisticInfoDTO;
+import com.tt98.pojo.dto.*;
 import com.tt98.pojo.vo.PageListVO;
+import com.tt98.server.common.ReqContext;
 import com.tt98.server.service.ArticleReadService;
 import com.tt98.server.service.ArticleService;
+import com.tt98.server.service.UserRelationService;
 import com.tt98.server.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +34,11 @@ public class UserController {
     private UserService userService;
     @Autowired
     private ArticleReadService articleReadService;
+    @Autowired
+    private UserRelationService userRelationService;
+
+    private static final List<String> followSelectTags = Arrays.asList("follow", "fans");
+
 
     @GetMapping("/home")
     public String home(@RequestParam(name = "userId") Long userId,
@@ -46,6 +52,8 @@ public class UserController {
 
         vo.setUserHome(userService.queryUserInfoWithStatistic(userId));
         setHomeSelectList(vo, userId);
+
+
         model.addAttribute("vo", vo);
         return "views/user/index";
     }
@@ -92,8 +100,8 @@ public class UserController {
         return tags;
     }
 
-    private void initFollowFansList(UserHomeVO vo, long userId, PageParam pageParam) {
-        PageListVo<FollowUserInfoDTO> followList;
+    private void initFollowFansList(UserHomeVO vo, long userId, PageParamDTO pageParam) {
+        PageListVO<FollowUserInfoDTO> followList;
         boolean needUpdateRelation = false;
         if (vo.getFollowSelectType().equals(FollowTypeEnum.FOLLOW.getCode())) {
             followList = userRelationService.getUserFollowList(userId, pageParam);
@@ -103,7 +111,7 @@ public class UserController {
             needUpdateRelation = true;
         }
 
-        Long loginUserId = ReqInfoContext.getReqInfo().getUserId();
+        Long loginUserId = ReqContext.getCurrentId();
         if (!Objects.equals(loginUserId, userId) || needUpdateRelation) {
             userRelationService.updateUserFollowRelationId(followList, loginUserId);
         }

@@ -3,6 +3,7 @@ package com.tt98.server.dao;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.tt98.pojo.Enum.PushStatusEnum;
 import com.tt98.pojo.Enum.YesOrNoEnum;
 import com.tt98.pojo.converter.ArticleConverter;
 import com.tt98.pojo.dto.ArticleDTO;
@@ -10,6 +11,7 @@ import com.tt98.pojo.dto.PageParamDTO;
 import com.tt98.pojo.dto.YearArticleDTO;
 import com.tt98.pojo.entity.ArticleDO;
 import com.tt98.pojo.entity.ArticleDetailDO;
+import com.tt98.server.common.ReqContext;
 import com.tt98.server.mapper.ArticleDetailMapper;
 import com.tt98.server.mapper.ArticleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,5 +86,18 @@ public class ArticleDAO extends ServiceImpl<ArticleMapper, ArticleDO> {
 
     public List<YearArticleDTO> listYearArticleByUserId(Long userId) {
         return baseMapper.listYearArticleByUserId(userId);
+    }
+
+    public List<ArticleDO> listArticlesByUserId(Long userId, PageParamDTO pageParamDTO) {
+        LambdaQueryWrapper<ArticleDO> query = Wrappers.lambdaQuery();
+        query.eq(ArticleDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .eq(ArticleDO::getUserId, userId)
+                .last(PageParamDTO.getLimitSql(pageParamDTO))
+                .orderByDesc(ArticleDO::getId);
+        if(!Objects.equals(ReqContext.getCurrentId(), userId)){
+            // 非作者本人只能看已发布的文章
+            query.eq(ArticleDO::getStatus, PushStatusEnum.ONLINE.getCode());
+        }
+        return baseMapper.selectList(query);
     }
 }

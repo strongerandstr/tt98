@@ -1,5 +1,6 @@
 package com.tt98.pojo;
 
+import com.tt98.pojo.Enum.StatusEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,8 +18,8 @@ public class Result<T> implements Serializable {
     }
 
     public Result(T t){
-        status = Status.newStatus(0, "OK");
-        result = t;
+        status = Status.newStatus(StatusEnum.SUCCESS);
+        this.result = t;
     }
 
 
@@ -30,5 +31,12 @@ public class Result<T> implements Serializable {
     public static <T> Result<T> fail(String msg){
         Status status = Status.newStatus(1, msg);
         return new Result(status);
+    }
+
+    public static <T> Result<T> fail(StatusEnum status, Object... args) {
+        return new Result<>(Status.newStatus(status, args));
+    }
+    public static <T> Result<T> fail(Status status) {
+        return new Result<>(status);
     }
 }

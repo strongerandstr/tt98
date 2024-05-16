@@ -5,6 +5,7 @@ import com.tt98.pojo.dto.CategoryDTO;
 import com.tt98.pojo.dto.UserStatisticInfoDTO;
 import com.tt98.pojo.entity.CategoryDO;
 import com.tt98.pojo.entity.UserInfoDO;
+import com.tt98.pojo.req.UserInfoSaveReq;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
@@ -63,5 +64,19 @@ public class Converter {
         }
         BeanUtils.copyProperties(baseUserInfoDTO, userHomeDTO);
         return userHomeDTO;
+    }
+
+    public static UserInfoDO toDO(UserInfoSaveReq req) {
+        if (req == null) {
+            return null;
+        }
+        UserInfoDO userInfoDO = new UserInfoDO();
+        userInfoDO.setUserId(req.getUserId());
+        userInfoDO.setUserName(req.getUserName());
+        userInfoDO.setPhoto(req.getPhoto());
+        userInfoDO.setPosition(req.getPosition());
+        userInfoDO.setCompany(req.getCompany());
+        userInfoDO.setProfile(req.getProfile());
+        return userInfoDO;
     }
 }

@@ -8,6 +8,7 @@ import com.tt98.pojo.dto.YearArticleDTO;
 import com.tt98.pojo.entity.UserDO;
 import com.tt98.pojo.entity.UserInfoDO;
 import com.tt98.pojo.entity.UserRelationDO;
+import com.tt98.pojo.req.UserInfoSaveReq;
 import com.tt98.server.common.ReqContext;
 import com.tt98.server.dao.ArticleDAO;
 import com.tt98.server.dao.UserInfoDAO;
@@ -90,11 +91,17 @@ public class UserServiceImpl implements UserService {
 
         // 创作历程
         List<YearArticleDTO> yearArticleDTOs = articleDAO.listYearArticleByUserId(userId);
-        userHomeDTO.setYearArticleDTOList(yearArticleDTOs);
+        userHomeDTO.setYearArticleList(yearArticleDTOs);
 
         return userHomeDTO;
 
 
+    }
+
+    @Override
+    public void saveUserInfo(UserInfoSaveReq req) {
+        UserInfoDO userInfoDO = Converter.toDO(req);
+        userInfoDAO.updateUserInfo(userInfoDO);
     }
 
     // 新增用户
