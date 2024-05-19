@@ -105,6 +105,11 @@ public class ArticleReadServiceImpl implements ArticleReadService {
         return buildArticleListVO(records, pageParamDTO.getPageSize());
     }
 
+    @Override
+    public ArticleDO queryBasicArticle(Long articleId) {
+        return articleDAO.getById(articleId);
+    }
+
     // TODO: 2024/5/16 这个排序逻辑，后期要改用数据库的排序 
     private List<ArticleDO> sortByIds(List<Long> articleIds, List<ArticleDO> records) {
         List<ArticleDO> articleDOS = new ArrayList<>();

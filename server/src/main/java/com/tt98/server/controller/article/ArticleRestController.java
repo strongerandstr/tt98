@@ -14,10 +14,7 @@ import com.tt98.pojo.req.ArticlePostReq;
 import com.tt98.pojo.vo.PageVO;
 import com.tt98.server.common.ReqContext;
 import com.tt98.server.common.util.SpringUtil;
-import com.tt98.server.service.ArticleReadService;
-import com.tt98.server.service.ArticleService;
-import com.tt98.server.service.TagService;
-import com.tt98.server.service.UserFootService;
+import com.tt98.server.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +35,8 @@ public class ArticleRestController {
     private ArticleReadService articleReadService;
     @Autowired
     private UserFootService userFootService;
+    @Autowired
+    private RabbitmqService rabbitmqService;
     @GetMapping("/tag/list")
     public Result<PageVO<TagDTO>> getTagList(@RequestParam(required = false) String key,
                                            @RequestParam(required = false, defaultValue = "1") Integer pageNumber,
