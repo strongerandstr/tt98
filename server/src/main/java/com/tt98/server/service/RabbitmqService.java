@@ -31,7 +31,7 @@ public interface RabbitmqService {
      * @throws IOException
      * @throws TimeoutException
      */
-    void consumeMsg(String exchange,
+    void consumerMsg(String exchange,
                     String queue,
                     String routingKey) throws IOException, TimeoutException;
 

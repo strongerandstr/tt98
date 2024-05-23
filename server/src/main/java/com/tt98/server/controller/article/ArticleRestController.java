@@ -1,6 +1,8 @@
 package com.tt98.server.controller.article;
 
 
+import com.github.hui.quick.plugin.qrcode.util.json.JsonUtil;
+import com.rabbitmq.client.BuiltinExchangeType;
 import com.tt98.pojo.Enum.DocumentTypeEnum;
 import com.tt98.pojo.Enum.NotifyTypeEnum;
 import com.tt98.pojo.Enum.OperateTypeEnum;
@@ -12,6 +14,8 @@ import com.tt98.pojo.entity.ArticleDO;
 import com.tt98.pojo.entity.UserFootDO;
 import com.tt98.pojo.req.ArticlePostReq;
 import com.tt98.pojo.vo.PageVO;
+import com.tt98.server.common.CommonConstants;
+import com.tt98.server.common.NotifyMsgEvent;
 import com.tt98.server.common.ReqContext;
 import com.tt98.server.common.util.SpringUtil;
 import com.tt98.server.service.*;
@@ -20,8 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeoutException;
 
 @Slf4j
 @RestController
@@ -58,7 +64,7 @@ public class ArticleRestController {
 
 
     public Result<Boolean> favor(@RequestParam(name = "articleId") Long articleId,
-                                 @RequestParam(name = "type") Integer type){
+                                 @RequestParam(name = "type") Integer type) throws IOException, TimeoutException {
         OperateTypeEnum operate = OperateTypeEnum.fromCode(type);
         if(operate == OperateTypeEnum.EMPTY){
             return Result.fail(StatusEnum.ILLEGAL_ARGUMENTS_MIXED, type + "非法");
@@ -83,7 +89,7 @@ public class ArticleRestController {
                     CommonConstants.QUERE_KEY_PRAISE,
                     JsonUtil.toStr(foot));
         } else {
-            Optional.ofNullable(notifyType).isPresent(notify -> SpringUtil.publishEvent(new NotifyMsgEvent<>(this, notify, foot)));
+            Optional.ofNullable(notifyType).ifPresent(notify -> SpringUtil.publishEvent(new NotifyMsgEvent<>(this, notify, foot)));
         }
 
         return Result.success(true);

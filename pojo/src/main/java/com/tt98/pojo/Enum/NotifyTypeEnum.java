@@ -1,8 +1,11 @@
 package com.tt98.pojo.Enum;
 
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
 public enum NotifyTypeEnum {
 
     COMMENT(1, "评论"),

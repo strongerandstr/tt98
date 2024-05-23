@@ -1,8 +1,12 @@
 package com.tt98.server.service.impl;
 
-import com.rabbitmq.client.BuiltinExchangeType;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
+import com.github.hui.quick.plugin.qrcode.util.json.JsonUtil;
+import com.rabbitmq.client.*;
+import com.tt98.pojo.Enum.NotifyTypeEnum;
+import com.tt98.pojo.entity.UserFootDO;
+import com.tt98.server.common.CommonConstants;
+import com.tt98.server.common.rabbitmq.RabbitmqConnection;
+import com.tt98.server.common.rabbitmq.RabbitmqConnectionPool;
 import com.tt98.server.common.util.SpringUtil;
 import com.tt98.server.service.NotifyService;
 import com.tt98.server.service.RabbitmqService;
@@ -46,12 +50,63 @@ public class RabbitmqServiceImpl implements RabbitmqService {
     }
 
     @Override
-    public void consumeMsg(String exchange, String queue, String routingKey) throws IOException, TimeoutException {
+    public void consumerMsg(String exchange, String queueName, String routingKey) throws IOException, TimeoutException {
+        try{
+            // 创建连接
+            RabbitmqConnection rabbitmqConnection = RabbitmqConnectionPool.getConnection();
+            Connection connection = rabbitmqConnection.getConnection();
+            // 创建消息信道
+            final Channel channel = connection.createChannel();
+            // 消息队列
+            channel.queueDeclare(queueName, true, false, false, null);
+            // 绑定队列到交换机
+            channel.queueBind(queueName, exchange, routingKey);
 
+            Consumer consumer = new DefaultConsumer(channel){
+                @Override
+                public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException{
+                    String message = new String(body, "UTF-8");
+                    log.info("Consumer msg: {}", message);
+
+                    // 获取Rabbitmq消息，并保存到DB
+                    // 说明：这里仅作为示例，如果有多种类型的消息，可以根据消息判定，简单的用 if...else 处理，复杂的用工厂 + 策略模式
+                    notifyService.saveArticleNotify(JsonUtil.toObj(message, UserFootDO.class), NotifyTypeEnum.PRAISE);
+                    channel.basicAck(envelope.getDeliveryTag(), false);
+                }
+            };
+            // 取消自动ack
+            channel.basicConsume(queueName, false, consumer);
+            channel.close();
+            RabbitmqConnectionPool.returnConnection(rabbitmqConnection);
+
+        } catch (InterruptedException | IOException | TimeoutException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void processConsumerMsg() {
+        log.info("Begin to processConsumerMsg.");
+
+        Integer stepTotal = 1;
+        Integer step = 0;
+
+        // TODO: 这种方式非常 Low，后续会改造成阻塞 I/O 模式
+        while (true) {
+            step++;
+            try {
+                log.info("processConsumerMsg cycle.");
+                consumerMsg(CommonConstants.EXCHANGE_NAME_DIRECT, CommonConstants.QUERE_NAME_PRAISE,
+                        CommonConstants.QUERE_KEY_PRAISE);
+                if (step.equals(stepTotal)) {
+                    Thread.sleep(10000);
+                    step = 0;
+                }
+            } catch (Exception e) {
+
+            }
+        }
+
 
     }
 }
